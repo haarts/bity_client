@@ -9,7 +9,7 @@ const currencies = ["EUR", "CHF", "BTC"];
 
 class Client {
   /// Used to send an appropriate User-Agent header with the HTTP requests.
-  static const String _userAgent = '{BTC|Bit}Pay - Dart';
+  static const String _userAgent = 'Bity - Dart';
   static const String _mediaType = 'application/json';
 
   static const _headers = {
