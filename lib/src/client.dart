@@ -14,6 +14,7 @@ class Client {
 
   static const String _estimatePath = '/orders/estimate';
   static const String _createOrderPath = '/orders/phone';
+  static const String _orderPath = '/orders/';
 
   static const _headers = {
     HttpHeaders.userAgentHeader: _userAgent,
@@ -95,6 +96,21 @@ class Client {
     }
 
     throw FailedHttpRequest(requestUrl, requestBody, response);
+  }
+
+  Future<Map<String, dynamic>> getOrder(String uuid) async {
+    var requestUrl = url.replace(path: _orderPath + uuid);
+
+    var response = await _httpClient.get(
+      requestUrl,
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    }
+
+    throw FailedHttpRequest(requestUrl, '', response);
   }
 
   void _anyUnsupportedCurrencies(inputCurrency, outputCurrency) {

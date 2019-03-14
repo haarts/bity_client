@@ -13,6 +13,7 @@ const inputAmount = 1.0;
 const outputCurrency = "EUR";
 const outputAmount = 20.3;
 const iban = "some iban";
+const someUuid = "0123456789abcdefghijk";
 
 void main() {
   setUp(() async {
@@ -109,6 +110,29 @@ void main() {
           equals(
               '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_address","amount":20.3,"iban":"some iban"}}'));
       expect(result, equals(someUrl));
+    });
+  });
+
+  group("getOrder()", () {
+    test("returns a sane error message", () async {
+      server.enqueue(httpCode: 400);
+
+      expect(
+          () => client.getOrder(someUuid),
+          throwsA(TypeMatcher<FailedHttpRequest>()
+              .having((e) => e.toString(), "toString()", contains('400'))));
+    });
+
+    test("returns the order", () async {
+      var cannedResponse = await File('test/files/order.json').readAsString();
+      server.enqueue(httpCode: 200, body: cannedResponse);
+
+      var response = await client.getOrder(someUuid);
+
+      var request = server.takeRequest();
+      expect(response, TypeMatcher<Map<String, dynamic>>());
+      expect(request.uri.path, '/orders/0123456789abcdefghijk');
+      expect(request.method, 'GET');
     });
   });
 }
