@@ -33,9 +33,17 @@ void main() {
 
   group("estimate()", () {
     test("rejects unsupported currencies", () {
-      expect(() => client.estimate("FOO", inputAmount, outputCurrency),
+      expect(
+          () => client.estimate(
+              inputCurrency: "FOO",
+              inputAmount: inputAmount,
+              outputCurrency: outputCurrency),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
-      expect(() => client.estimate(inputCurrency, inputAmount, "BAR"),
+      expect(
+          () => client.estimate(
+              inputCurrency: inputCurrency,
+              inputAmount: inputAmount,
+              outputCurrency: "BAR"),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
@@ -54,8 +62,10 @@ void main() {
       }
       ''');
 
-      var result =
-          await client.estimate(inputCurrency, inputAmount, outputCurrency);
+      var result = await client.estimate(
+          inputCurrency: inputCurrency,
+          inputAmount: inputAmount,
+          outputCurrency: outputCurrency);
 
       var request = server.takeRequest();
       expect(request.uri.path, '/api/v2/orders/estimate');
@@ -67,7 +77,10 @@ void main() {
       server.enqueue(httpCode: 400);
 
       expect(
-          () => client.estimate(inputCurrency, inputAmount, outputCurrency),
+          () => client.estimate(
+              inputCurrency: inputCurrency,
+              inputAmount: inputAmount,
+              outputCurrency: outputCurrency),
           throwsA(TypeMatcher<FailedHttpRequest>()
               .having((e) => e.toString(), "toString()", contains('400'))));
     });
@@ -77,11 +90,17 @@ void main() {
     test("rejects unsupported currencies", () async {
       expect(
           () => client.createCryptoToFiatOrder(
-              "FOO", inputAmount, outputCurrency, iban),
+              inputCurrency: "FOO",
+              outputAmount: outputAmount,
+              outputCurrency: outputCurrency,
+              outputIban: iban),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
       expect(
           () => client.createCryptoToFiatOrder(
-              inputCurrency, inputAmount, "BAR", iban),
+              inputCurrency: inputCurrency,
+              outputAmount: outputAmount,
+              outputCurrency: "BAR",
+              outputIban: iban),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
@@ -90,7 +109,10 @@ void main() {
 
       expect(
           () => client.createCryptoToFiatOrder(
-              inputCurrency, inputAmount, outputCurrency, iban),
+              inputCurrency: inputCurrency,
+              outputAmount: outputAmount,
+              outputCurrency: outputCurrency,
+              outputIban: iban),
           throwsA(TypeMatcher<FailedHttpRequest>()
               .having((e) => e.toString(), "toString()", contains('400'))));
     });
@@ -102,7 +124,10 @@ void main() {
           httpCode: 201, headers: {HttpHeaders.locationHeader: someUrl});
 
       var result = await client.createCryptoToFiatOrder(
-          inputCurrency, outputAmount, outputCurrency, iban);
+          inputCurrency: inputCurrency,
+          outputAmount: outputAmount,
+          outputCurrency: outputCurrency,
+          outputIban: iban);
 
       var request = server.takeRequest();
       expect(request.uri.path, '/api/v2/orders/phone');

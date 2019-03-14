@@ -42,7 +42,7 @@ class Client {
   ///
   /// Throws a [UnsupportedCurrency] if either of the currencies is unsupported.
   Future<double> estimate(
-      String inputCurrency, double inputAmount, String outputCurrency) async {
+      {String inputCurrency, double inputAmount, String outputCurrency}) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
 
     var requestUrl = url.replace(path: _estimatePath);
@@ -68,8 +68,11 @@ class Client {
   /// Create an order by specifying the crypto in which payment will be made and the *desired* to-be-paid amount in fiat.
   ///
   /// Throws a [UnsupportedCurrency] if either of the currencies is unsupported.
-  Future<String> createCryptoToFiatOrder(String inputCurrency,
-      double outputAmount, String outputCurrency, String outputIban) async {
+  Future<String> createCryptoToFiatOrder(
+      {String inputCurrency,
+      double outputAmount,
+      String outputCurrency,
+      String outputIban}) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
 
     var requestUrl = url.replace(path: _createOrderPath);

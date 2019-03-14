@@ -6,8 +6,18 @@ A library for communicating with the [Bity API].
 
 ## Examples
 
+### Get an estimate
 ```dart
+  var client = Client('https://bity.com/');
+  print(await client.estimate(inputCurrency: "BTC", inputAmount: 1, outputCurrency: "CHF"));
+  client.close();
+```
 
+### Create a crypto to fiat order
+```dart
+  var client = Client('https://bity.com/');
+  print(await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban"));
+  client.close();
 ```
 
 ## Installing
