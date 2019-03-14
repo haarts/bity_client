@@ -57,7 +57,9 @@ void main() {
       var result =
           await client.estimate(inputCurrency, inputAmount, outputCurrency);
 
-      expect(server.takeRequest().uri.path, '/orders/estimate');
+      var request = server.takeRequest();
+      expect(request.uri.path, '/orders/estimate');
+      expect(request.method, 'POST');
       expect(result, equals(outputAmount));
     });
 
@@ -103,8 +105,8 @@ void main() {
           inputCurrency, outputAmount, outputCurrency, iban);
 
       var request = server.takeRequest();
-
       expect(request.uri.path, '/orders/phone');
+      expect(request.method, 'POST');
       expect(
           request.body,
           equals(
