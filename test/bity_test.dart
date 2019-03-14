@@ -58,7 +58,7 @@ void main() {
           await client.estimate(inputCurrency, inputAmount, outputCurrency);
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/orders/estimate');
+      expect(request.uri.path, '/api/v2/orders/estimate');
       expect(request.method, 'POST');
       expect(result, equals(outputAmount));
     });
@@ -105,7 +105,7 @@ void main() {
           inputCurrency, outputAmount, outputCurrency, iban);
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/orders/phone');
+      expect(request.uri.path, '/api/v2/orders/phone');
       expect(request.method, 'POST');
       expect(
           request.body,
@@ -133,7 +133,7 @@ void main() {
 
       var request = server.takeRequest();
       expect(response, TypeMatcher<Map<String, dynamic>>());
-      expect(request.uri.path, '/orders/0123456789abcdefghijk');
+      expect(request.uri.path, '/api/v2/orders/0123456789abcdefghijk');
       expect(request.method, 'GET');
     });
   });

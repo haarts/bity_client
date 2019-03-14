@@ -12,9 +12,10 @@ class Client {
   static const String _userAgent = 'Bity - Dart';
   static const String _mediaType = 'application/json';
 
-  static const String _estimatePath = '/orders/estimate';
-  static const String _createOrderPath = '/orders/phone';
-  static const String _orderPath = '/orders/';
+  static const String _apiPrefix = '/api/v2';
+  static const String _estimatePath = _apiPrefix + '/orders/estimate';
+  static const String _createOrderPath = _apiPrefix + '/orders/phone';
+  static const String _orderPath = _apiPrefix + '/orders/';
 
   static const _headers = {
     HttpHeaders.userAgentHeader: _userAgent,
