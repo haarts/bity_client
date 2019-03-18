@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/bity.svg)](https://pub.dartlang.org/packages/bity)
 
-A library for communicating with the [Bity API].
+A library for communicating with the [Bity API]. Some calls are missing.
 
 ## Examples
 
