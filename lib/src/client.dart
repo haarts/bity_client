@@ -23,7 +23,7 @@ class Client {
     HttpHeaders.contentTypeHeader: _mediaType,
   };
 
-  /// The URL of the BTCPay server.
+  /// The URL of the Bity server.
   Uri url;
 
   http.Client _httpClient;
@@ -102,6 +102,7 @@ class Client {
     throw FailedHttpRequest(requestUrl, requestBody, response);
   }
 
+  /// Returns an order identified by a UUID
   Future<Map<String, dynamic>> getOrder(String uuid) async {
     var requestUrl = url.replace(path: _orderPath + uuid);
 
