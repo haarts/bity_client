@@ -1,3 +1,6 @@
+v0.2.1
+* Add Output class
+ 
 v0.2.0
 * Add Order class
  

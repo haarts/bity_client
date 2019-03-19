@@ -181,5 +181,10 @@ void main() {
     Input input = order.input;
 
     expect(input.amount, 0.5);
+
+    Output output = order.output;
+
+    expect(output.amount, 104.95);
+    expect(output.iban, "CH3600000000000000000");
   });
 }
