@@ -1,3 +1,6 @@
+v0.2.0
+* Add Order class
+ 
 v0.1.1
 * Tidy up code base
  

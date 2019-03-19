@@ -1,6 +1,6 @@
 name: bity
-version: 0.1.1
-description: Library for communicating with the Bity API v2.
+version: 0.2.0
+description: Minimalistic library for communicating with the Bity API v2.
 author: Kolibri POS authors <info@kolibripos.com>
 homepage: https://github.com/Kolibri-POS/bity_client
 

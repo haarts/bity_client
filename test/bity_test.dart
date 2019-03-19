@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:test/test.dart';
@@ -157,9 +158,28 @@ void main() {
       var response = await client.getOrder(someUuid);
 
       var request = server.takeRequest();
-      expect(response, TypeMatcher<Map<String, dynamic>>());
+      expect(response, TypeMatcher<Order>());
       expect(request.uri.path, '/api/v2/orders/0123456789abcdefghijk');
       expect(request.method, 'GET');
     });
+  });
+
+  test("Order.fromJson()", () async {
+    var jsonString = await File('test/files/order.json').readAsString();
+
+    Order order = Order.fromJson(json.decode(jsonString));
+
+    expect(order.id, "0123456789abcdefghijk");
+
+    PaymentDetails paymentDetails = order.paymentDetails;
+
+    expect(paymentDetails.type, "crypto_address");
+    expect(paymentDetails.cryptoAddress,
+        "0xf35074bbd0a9aee46f4ea137971feec024ab7048");
+    expect(paymentDetails.bankAccount, null);
+
+    Input input = order.input;
+
+    expect(input.amount, 0.5);
   });
 }

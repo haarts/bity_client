@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'exceptions.dart';
+import 'order.dart';
 
+// TODO split this in crypto and fiat, then the checks can be more specific.
 const currencies = ["EUR", "CHF", "BTC"];
 
 class Client {
@@ -103,7 +105,7 @@ class Client {
   }
 
   /// Returns an order identified by a UUID
-  Future<Map<String, dynamic>> getOrder(String uuid) async {
+  Future<Order> getOrder(String uuid) async {
     var requestUrl = url.replace(path: _orderPath + uuid);
 
     var response = await _httpClient.get(
@@ -112,7 +114,7 @@ class Client {
     );
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return Order.fromJson(json.decode(response.body));
     }
 
     throw FailedHttpRequest(requestUrl, '', response);
