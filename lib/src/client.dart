@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:iban/iban.dart';
 
 import 'exceptions.dart';
 import 'order.dart';
@@ -76,6 +77,7 @@ class Client {
       String outputCurrency,
       String outputIban}) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
+    _validateIban(outputIban);
 
     var requestUrl = url.replace(path: _createOrderPath);
 
@@ -118,6 +120,12 @@ class Client {
     }
 
     throw FailedHttpRequest(requestUrl, '', response);
+  }
+
+  void _validateIban(String iban) {
+    if (!isValid(iban)) {
+      throw InvalidIban(iban);
+    }
   }
 
   void _anyUnsupportedCurrencies(inputCurrency, outputCurrency) {

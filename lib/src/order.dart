@@ -36,5 +36,4 @@ class Output {
   Output.fromJson(Map<String, dynamic> json)
       : amount = double.parse(json['amount']),
         iban = json['iban'];
-
 }

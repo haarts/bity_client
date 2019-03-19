@@ -9,6 +9,13 @@ class UnsupportedCurrency implements Exception {
       "'$providedCurrency' is not a valid currency: $supportedCurrencies";
 }
 
+class InvalidIban implements Exception {
+  InvalidIban(this.iban);
+  String iban;
+
+  String toString() => "'$iban' is not a valid IBAN";
+}
+
 class FailedHttpRequest implements Exception {
   FailedHttpRequest(this.requestUrl, this.requestBody, this.response);
   Uri requestUrl;

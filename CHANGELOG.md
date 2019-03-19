@@ -1,3 +1,6 @@
+v0.2.2
+* Add IBAN validation
+ 
 v0.2.1
 * Add Output class
  

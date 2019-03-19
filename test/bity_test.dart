@@ -13,7 +13,7 @@ const inputCurrency = "BTC";
 const inputAmount = 1.0;
 const outputCurrency = "EUR";
 const outputAmount = 20.3;
-const iban = "some iban";
+const iban = "AT611904300234573201";
 const someUuid = "0123456789abcdefghijk";
 
 void main() {
@@ -136,7 +136,7 @@ void main() {
       expect(
           request.body,
           equals(
-              '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_address","amount":20.3,"iban":"some iban"}}'));
+              '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_address","amount":20.3,"iban":"AT611904300234573201"}}'));
       expect(result, equals(someUrl));
     });
   });
