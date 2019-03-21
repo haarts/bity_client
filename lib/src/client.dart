@@ -44,7 +44,7 @@ class Client {
   /// Estimate how much output currency a specific amount of input currency would yield
   ///
   /// Throws a [UnsupportedCurrency] if either of the currencies is unsupported.
-  Future<double> estimate(
+  Future<double> getEstimate(
       {String inputCurrency, double inputAmount, String outputCurrency}) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
 

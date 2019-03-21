@@ -32,16 +32,16 @@ void main() {
     expect(client.url.host, "127.0.0.1");
   });
 
-  group("estimate()", () {
+  group("getEstimate()", () {
     test("rejects unsupported currencies", () {
       expect(
-          () => client.estimate(
+          () => client.getEstimate(
               inputCurrency: "FOO",
               inputAmount: inputAmount,
               outputCurrency: outputCurrency),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
       expect(
-          () => client.estimate(
+          () => client.getEstimate(
               inputCurrency: inputCurrency,
               inputAmount: inputAmount,
               outputCurrency: "BAR"),
@@ -63,7 +63,7 @@ void main() {
       }
       ''');
 
-      var result = await client.estimate(
+      var result = await client.getEstimate(
           inputCurrency: inputCurrency,
           inputAmount: inputAmount,
           outputCurrency: outputCurrency);
@@ -78,7 +78,7 @@ void main() {
       server.enqueue(httpCode: 400);
 
       expect(
-          () => client.estimate(
+          () => client.getEstimate(
               inputCurrency: inputCurrency,
               inputAmount: inputAmount,
               outputCurrency: outputCurrency),
