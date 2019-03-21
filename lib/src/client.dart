@@ -164,15 +164,11 @@ class Client {
     if (response.statusCode == 200) {
       var jsonCurrencies = json.decode(response.body);
       return jsonCurrencies["currencies"]
-          .map<String>(_onlyCurrencyCode)
+          .map<String>((currency) => currency["code"] as String)
           .toList();
     }
 
     throw FailedHttpRequest(requestUrl, '', response);
-  }
-
-  String _onlyCurrencyCode(dynamic currency) {
-    return currency["code"];
   }
 
   void _validateIban(String iban) {
