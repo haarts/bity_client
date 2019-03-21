@@ -18,7 +18,7 @@ class Client {
   static const String _apiPrefix = '/api/v2';
   static const String _estimatePath = _apiPrefix + '/orders/estimate';
   static const String _createOrderPath = _apiPrefix + '/orders/phone';
-  static const String _orderPath = _apiPrefix + '/orders/';
+  static const String _ordersPath = _apiPrefix + '/orders';
 
   static const _headers = {
     HttpHeaders.userAgentHeader: _userAgent,
@@ -108,7 +108,7 @@ class Client {
 
   /// Returns an order identified by a UUID
   Future<Order> getOrder(String uuid) async {
-    var requestUrl = url.replace(path: _orderPath + uuid);
+    var requestUrl = url.replace(path: _ordersPath + "/" + uuid);
 
     var response = await _httpClient.get(
       requestUrl,
@@ -117,6 +117,24 @@ class Client {
 
     if (response.statusCode == 200) {
       return Order.fromJson(json.decode(response.body));
+    }
+
+    throw FailedHttpRequest(requestUrl, '', response);
+  }
+
+  Future<List<Order>> getOrders() async {
+    var requestUrl = url.replace(path: _ordersPath);
+
+    var response = await _httpClient.get(
+      requestUrl,
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      var jsonOrders = json.decode(response.body);
+      return jsonOrders["orders"]
+          .map<Order>((order) => Order.fromJson(order))
+          .toList();
     }
 
     throw FailedHttpRequest(requestUrl, '', response);

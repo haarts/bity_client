@@ -1,0 +1,33 @@
+{
+  "orders": [
+    {
+      "id": "0123456789abcdefghijk",
+      "payment_details": {
+        "type": "crypto_address",
+        "crypto_address": "0xf35074bbd0a9aee46f4ea137971feec024ab7048"
+      },
+      "input": {
+        "currency": "ETH",
+        "amount": "0.5",
+        "type": "crypto_address",
+        "crypto_address": "0x24305d091f79ee490a34de080b0db5773be5bef4"
+      },
+      "output": {
+        "currency": "CHF",
+        "amount": "104.95",
+        "type": "bank_account",
+        "iban": "CH3600000000000000000",
+        "bic_swift": "BCNNCH22",
+        "owner": {
+          "name": "John Doe",
+          "country": "CH",
+          "city": "Neuchatel",
+          "address": "Rue des Fahrys 2"
+        }
+      },
+      "timestamp_created": "2019-01-24T13:14:07.368Z",
+      "timestamp_cancelled": "2019-01-25T01:06:11.632Z",
+      "legacy_status": "CANC"
+    }
+  ]
+}

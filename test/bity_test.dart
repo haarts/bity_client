@@ -156,9 +156,9 @@ void main() {
       server.enqueue(httpCode: 200, body: cannedResponse);
 
       var response = await client.getOrder(someUuid);
+      expect(response, TypeMatcher<Order>());
 
       var request = server.takeRequest();
-      expect(response, TypeMatcher<Order>());
       expect(request.uri.path, '/api/v2/orders/0123456789abcdefghijk');
       expect(request.method, 'GET');
     });
@@ -186,5 +186,29 @@ void main() {
 
     expect(output.amount, 104.95);
     expect(output.iban, "CH3600000000000000000");
+  });
+
+  group("getOrders()", () {
+    test("returns a sane error message", () async {
+      server.enqueue(httpCode: 400);
+
+      expect(
+          () => client.getOrders(),
+          throwsA(TypeMatcher<FailedHttpRequest>()
+              .having((e) => e.toString(), "toString()", contains('400'))));
+    });
+
+    test("returns the order", () async {
+      var cannedResponse = await File('test/files/orders.json').readAsString();
+      server.enqueue(httpCode: 200, body: cannedResponse);
+
+      var response = await client.getOrders();
+      expect(response, TypeMatcher<List<Order>>());
+      expect(response, hasLength(1));
+
+      var request = server.takeRequest();
+      expect(request.uri.path, '/api/v2/orders');
+      expect(request.method, 'GET');
+    });
   });
 }

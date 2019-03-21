@@ -1,3 +1,6 @@
+v0.2.3
+* Add getOrders call
+
 v0.2.2
 * Add IBAN validation
  
