@@ -14,9 +14,21 @@ A library for communicating with the [Bity API]. Some calls are missing.
 ```
 
 ### Create a crypto to fiat order
+In this example you want to buy 1000 CHF for Ether. How much Ether that
+is going to cost can be found by looking at the generated order.
+
 ```dart
   var client = Client('https://bity.com/');
-  print(await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban"));
+  var uuid = await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban"));
+  print(uuid);
+  client.close();
+```
+
+### View order
+
+```dart
+  var client = Client('https://bity.com/');
+  print(await client.getOrder("some uuid"));
   client.close();
 ```
 
