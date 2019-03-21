@@ -198,7 +198,7 @@ void main() {
               .having((e) => e.toString(), "toString()", contains('400'))));
     });
 
-    test("returns the order", () async {
+    test("returns the orders", () async {
       var cannedResponse = await File('test/files/orders.json').readAsString();
       server.enqueue(httpCode: 200, body: cannedResponse);
 
@@ -208,6 +208,21 @@ void main() {
 
       var request = server.takeRequest();
       expect(request.uri.path, '/api/v2/orders');
+      expect(request.method, 'GET');
+    });
+  });
+
+  group("getCurrencies()", () {
+    test("returns the currencies", () async {
+      var cannedResponse = await File('test/files/currencies.json').readAsString();
+      server.enqueue(httpCode: 200, body: cannedResponse);
+
+      var response = await client.getCurrencies();
+      expect(response, TypeMatcher<List<String>>());
+      expect(response, hasLength(5));
+
+      var request = server.takeRequest();
+      expect(request.uri.path, '/api/v2/currencies');
       expect(request.method, 'GET');
     });
   });

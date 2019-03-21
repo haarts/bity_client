@@ -19,6 +19,7 @@ class Client {
   static const String _estimatePath = _apiPrefix + '/orders/estimate';
   static const String _createOrderPath = _apiPrefix + '/orders/phone';
   static const String _ordersPath = _apiPrefix + '/orders';
+  static const String _currenciesPath = _apiPrefix + '/currencies';
 
   static const _headers = {
     HttpHeaders.userAgentHeader: _userAgent,
@@ -138,6 +139,40 @@ class Client {
     }
 
     throw FailedHttpRequest(requestUrl, '', response);
+  }
+
+  Future<List<String>> getFiatCurrencies() async {
+    return getCurrencies("fiat");
+  }
+
+  Future<List<String>> getCryptoCurrencies() async {
+    return getCurrencies("crypto");
+  }
+
+  Future<List<String>> getCurrencies([String filter]) async {
+    String tags = "";
+    if (filter != null) {
+      tags = "?tags=$filter";
+    }
+    var requestUrl = url.replace(path: _currenciesPath + tags);
+
+    var response = await _httpClient.get(
+      requestUrl,
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      var jsonCurrencies = json.decode(response.body);
+      return jsonCurrencies["currencies"]
+          .map<String>(_onlyCurrencyCode)
+          .toList();
+    }
+
+    throw FailedHttpRequest(requestUrl, '', response);
+  }
+
+  String _onlyCurrencyCode(dynamic currency) {
+    return currency["code"];
   }
 
   void _validateIban(String iban) {
