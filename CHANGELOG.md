@@ -1,3 +1,6 @@
+v0.2.4
+* Fix createCryptoToFiatOrder call
+ 
 v0.2.3
 * Add getOrders call
 
