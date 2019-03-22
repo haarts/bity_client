@@ -134,9 +134,10 @@ void main() {
       expect(request.uri.path, '/api/v2/orders/phone');
       expect(request.method, 'POST');
       expect(
-          request.body,
-          equals(
-              '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_address","amount":20.3,"iban":"AT611904300234573201"}}'));
+        request.body,
+        equals(
+            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201"}}'),
+      );
       expect(result, equals(someUrl));
     });
   });
@@ -214,7 +215,8 @@ void main() {
 
   group("getCurrencies()", () {
     test("returns the currencies", () async {
-      var cannedResponse = await File('test/files/currencies.json').readAsString();
+      var cannedResponse =
+          await File('test/files/currencies.json').readAsString();
       server.enqueue(httpCode: 200, body: cannedResponse);
 
       var response = await client.getCurrencies();

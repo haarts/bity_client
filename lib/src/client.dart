@@ -88,8 +88,8 @@ class Client {
     };
     var output = {
       "currency": outputCurrency,
-      "type": "bank_address",
-      "amount": outputAmount,
+      "type": "bank_account",
+      "amount": outputAmount.toString(),
       "iban": outputIban,
     };
     var requestBody = json.encode({"input": input, "output": output});
