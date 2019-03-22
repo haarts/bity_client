@@ -1,0 +1,37 @@
+{
+  "currencies": [
+    {
+      "code": "BTC",
+      "tags": [
+        "crypto"
+      ]
+    },
+    {
+      "code": "CHF",
+      "tags": [
+        "fiat"
+      ]
+    },
+    {
+      "code": "ETH",
+      "tags": [
+        "crypto",
+        "ethereum"
+      ]
+    },
+    {
+      "code": "EUR",
+      "tags": [
+        "fiat"
+      ]
+    },
+    {
+      "code": "REP",
+      "tags": [
+        "crypto",
+        "ethereum",
+        "erc20"
+      ]
+    }
+  ]
+}
