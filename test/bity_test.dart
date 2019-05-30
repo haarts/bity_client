@@ -69,7 +69,7 @@ void main() {
           outputCurrency: outputCurrency);
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/api/v2/orders/estimate');
+      expect(request.uri.path, '/v2/orders/estimate');
       expect(request.method, 'POST');
       expect(result, equals(outputAmount));
     });
@@ -131,7 +131,7 @@ void main() {
           outputIban: iban);
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/api/v2/orders/phone');
+      expect(request.uri.path, '/v2/orders');
       expect(request.method, 'POST');
       expect(
         request.body,
@@ -160,7 +160,7 @@ void main() {
       expect(response, TypeMatcher<Order>());
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/api/v2/orders/0123456789abcdefghijk');
+      expect(request.uri.path, '/v2/orders/0123456789abcdefghijk');
       expect(request.method, 'GET');
     });
   });
@@ -208,7 +208,7 @@ void main() {
       expect(response, hasLength(1));
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/api/v2/orders');
+      expect(request.uri.path, '/v2/orders');
       expect(request.method, 'GET');
     });
   });
@@ -224,7 +224,7 @@ void main() {
       expect(response, hasLength(5));
 
       var request = server.takeRequest();
-      expect(request.uri.path, '/api/v2/currencies');
+      expect(request.uri.path, '/v2/currencies');
       expect(request.method, 'GET');
     });
   });

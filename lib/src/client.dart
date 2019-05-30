@@ -15,9 +15,9 @@ class Client {
   static const String _userAgent = 'Bity - Dart';
   static const String _mediaType = 'application/json';
 
-  static const String _apiPrefix = '/api/v2';
+  static const String _apiPrefix = '/v2';
   static const String _estimatePath = _apiPrefix + '/orders/estimate';
-  static const String _createOrderPath = _apiPrefix + '/orders/phone';
+  static const String _createOrderPath = _apiPrefix + '/orders';
   static const String _ordersPath = _apiPrefix + '/orders';
   static const String _currenciesPath = _apiPrefix + '/currencies';
 
