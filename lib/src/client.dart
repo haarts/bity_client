@@ -53,7 +53,7 @@ class Client {
 
     var requestUrl = url.replace(path: _estimatePath);
     var requestBody = json.encode({
-      "input": {"currency": inputCurrency, "amount": inputAmount},
+      "input": {"currency": inputCurrency, "amount": inputAmount.toString()},
       "output": {"currency": outputCurrency}
     });
 

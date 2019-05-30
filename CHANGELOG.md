@@ -1,3 +1,7 @@
+v0.2.6
+* Updated API endpoints
+* Fix bug in which amount was not submitted as a String
+
 v0.2.5
 * Workaround Bity's inability to handle URL encoding
  
