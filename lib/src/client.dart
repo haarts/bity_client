@@ -32,9 +32,11 @@ class Client {
 
   http.Client _httpClient;
 
+  /// Create a new Bity client. Only the domain should be passed (the path is
+  /// stripped).
   Client(String url) {
     _httpClient = http.Client();
-    this.url = Uri.parse(url);
+    this.url = Uri.parse(url).replace(path: "");
   }
 
   /// Close the client when done.
@@ -154,7 +156,7 @@ class Client {
     if (filter != null) {
       tags = "?tags=$filter";
     }
-    var requestUrl = url.replace(path: _currenciesPath + tags);
+    var requestUrl = url.toString() + _currenciesPath + tags;
 
     var response = await _httpClient.get(
       requestUrl,
@@ -168,7 +170,7 @@ class Client {
           .toList();
     }
 
-    throw FailedHttpRequest(requestUrl, '', response);
+    throw FailedHttpRequest(Uri.parse(requestUrl), '', response);
   }
 
   void _validateIban(String iban) {

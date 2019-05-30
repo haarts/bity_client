@@ -1,3 +1,6 @@
+v0.2.5
+* Workaround Bity's inability to handle URL encoding
+ 
 v0.2.4
 * Fix createCryptoToFiatOrder call
  
