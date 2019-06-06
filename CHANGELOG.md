@@ -1,3 +1,7 @@
+v0.3.0
+* Order placement needs an Owner
+* Order queries need a session identifier
+
 v0.2.6
 * Updated API endpoints
 * Fix bug in which amount was not submitted as a String
