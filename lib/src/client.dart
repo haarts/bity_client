@@ -6,6 +6,7 @@ import 'package:iban/iban.dart';
 
 import 'exceptions.dart';
 import 'order.dart';
+import 'owner.dart';
 
 // TODO split this in crypto and fiat, then the checks can be more specific.
 const currencies = ["EUR", "CHF", "BTC"];
@@ -31,6 +32,8 @@ class Client {
   Uri url;
 
   http.Client _httpClient;
+
+  Cookie _session;
 
   /// Create a new Bity client. Only the domain should be passed (the path is
   /// stripped).
@@ -74,11 +77,13 @@ class Client {
   /// Create an order by specifying the crypto in which payment will be made and the *desired* to-be-paid amount in fiat.
   ///
   /// Throws a [UnsupportedCurrency] if either of the currencies is unsupported.
-  Future<String> createCryptoToFiatOrder(
-      {String inputCurrency,
-      double outputAmount,
-      String outputCurrency,
-      String outputIban}) async {
+  Future<String> createCryptoToFiatOrder({
+    String inputCurrency,
+    double outputAmount,
+    String outputCurrency,
+    String outputIban,
+    Owner owner,
+  }) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
     _validateIban(outputIban);
 
@@ -93,16 +98,24 @@ class Client {
       "type": "bank_account",
       "amount": outputAmount.toString(),
       "iban": outputIban,
+      "owner": owner,
     };
     var requestBody = json.encode({"input": input, "output": output});
+
+    var headers = Map<String, String>.from(_headers);
+    if (_session != null) {
+      headers..[HttpHeaders.cookieHeader] = _session.toString();
+    }
 
     var response = await _httpClient.post(
       requestUrl,
       body: requestBody,
-      headers: _headers,
+      headers: headers,
     );
 
     if (response.statusCode == 201) {
+      _setSession(response);
+
       return response.headers[HttpHeaders.locationHeader];
     }
 
@@ -115,7 +128,8 @@ class Client {
 
     var response = await _httpClient.get(
       requestUrl,
-      headers: _headers,
+      headers: Map.from(_headers)
+        ..[HttpHeaders.cookieHeader] = _session.toString(),
     );
 
     if (response.statusCode == 200) {
@@ -130,7 +144,8 @@ class Client {
 
     var response = await _httpClient.get(
       requestUrl,
-      headers: _headers,
+      headers: Map.from(_headers)
+        ..[HttpHeaders.cookieHeader] = _session.toString(),
     );
 
     if (response.statusCode == 200) {
@@ -171,6 +186,13 @@ class Client {
     }
 
     throw FailedHttpRequest(Uri.parse(requestUrl), '', response);
+  }
+
+  void _setSession(http.Response response) {
+    String cookie = response.headers[HttpHeaders.setCookieHeader];
+    if (cookie != null) {
+      _session = Cookie.fromSetCookieValue(cookie);
+    }
   }
 
   void _validateIban(String iban) {

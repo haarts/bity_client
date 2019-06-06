@@ -15,6 +15,13 @@ const outputCurrency = "EUR";
 const outputAmount = 20.3;
 const iban = "AT611904300234573201";
 const someUuid = "0123456789abcdefghijk";
+var owner = Owner(
+  "Some street",
+  "Some city",
+  "Some zip",
+  "Some country",
+  "Some name",
+);
 
 void main() {
   setUp(() async {
@@ -54,7 +61,8 @@ void main() {
        {
         "input": {
           "currency": "BTC",
-          "amount": "1.00000000"
+          "amount": "1.00000000",
+          "minimum_amount": "0.00100000"
         },
         "output": {
           "currency": "EUR",
@@ -91,17 +99,22 @@ void main() {
     test("rejects unsupported currencies", () async {
       expect(
           () => client.createCryptoToFiatOrder(
-              inputCurrency: "FOO",
-              outputAmount: outputAmount,
-              outputCurrency: outputCurrency,
-              outputIban: iban),
+                inputCurrency: "FOO",
+                outputAmount: outputAmount,
+                outputCurrency: outputCurrency,
+                outputIban: iban,
+                owner: owner,
+              ),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
+
       expect(
           () => client.createCryptoToFiatOrder(
-              inputCurrency: inputCurrency,
-              outputAmount: outputAmount,
-              outputCurrency: "BAR",
-              outputIban: iban),
+                inputCurrency: inputCurrency,
+                outputAmount: outputAmount,
+                outputCurrency: "BAR",
+                outputIban: iban,
+                owner: owner,
+              ),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
@@ -110,35 +123,83 @@ void main() {
 
       expect(
           () => client.createCryptoToFiatOrder(
-              inputCurrency: inputCurrency,
-              outputAmount: outputAmount,
-              outputCurrency: outputCurrency,
-              outputIban: iban),
+                inputCurrency: inputCurrency,
+                outputAmount: outputAmount,
+                outputCurrency: outputCurrency,
+                outputIban: iban,
+                owner: owner,
+              ),
           throwsA(TypeMatcher<FailedHttpRequest>()
               .having((e) => e.toString(), "toString()", contains('400'))));
     });
 
     test("return a URL pointing to the created order", () async {
       const someUrl =
-          "https://bity.com/api/v2/orders/420cb74c-f347-4460-b085-13641ad74525";
+          "https://exchange.api.bity.com/v2/orders/420cb74c-f347-4460-b085-13641ad74525";
       server.enqueue(
           httpCode: 201, headers: {HttpHeaders.locationHeader: someUrl});
 
       var result = await client.createCryptoToFiatOrder(
-          inputCurrency: inputCurrency,
-          outputAmount: outputAmount,
-          outputCurrency: outputCurrency,
-          outputIban: iban);
+        inputCurrency: inputCurrency,
+        outputAmount: outputAmount,
+        outputCurrency: outputCurrency,
+        outputIban: iban,
+        owner: owner,
+      );
 
       var request = server.takeRequest();
       expect(request.uri.path, '/v2/orders');
       expect(request.method, 'POST');
+      expect(request.headers[HttpHeaders.cookieHeader], isNull);
       expect(
         request.body,
         equals(
-            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201"}}'),
+            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201","owner":{"address":"Some street","country":"Some country","city":"Some city","zip":"Some zip","name":"Some name"}}}'),
       );
       expect(result, equals(someUrl));
+    });
+
+    test("client sends a session cookie when present", () async {
+      var sessionValue = "session=first";
+
+      // Setup first response
+      server.enqueue(
+        httpCode: 201,
+        headers: {
+          HttpHeaders.setCookieHeader: sessionValue,
+        },
+      );
+      // This sets the session
+      await client.createCryptoToFiatOrder(
+        inputCurrency: inputCurrency,
+        outputAmount: outputAmount,
+        outputCurrency: outputCurrency,
+        outputIban: iban,
+        owner: owner,
+      );
+      // Not interested in the first request
+      server.takeRequest();
+
+      // Setup second response
+      server.enqueue(
+        httpCode: 201,
+        headers: {
+          HttpHeaders.setCookieHeader: "session=second",
+        },
+      );
+
+      // This request SHOULD pass the session value received from the first
+      // request
+      await client.createCryptoToFiatOrder(
+        inputCurrency: inputCurrency,
+        outputAmount: outputAmount,
+        outputCurrency: outputCurrency,
+        outputIban: iban,
+        owner: owner,
+      );
+
+      var request = server.takeRequest();
+      expect(request.headers[HttpHeaders.cookieHeader], sessionValue);
     });
   });
 
@@ -170,22 +231,21 @@ void main() {
 
     Order order = Order.fromJson(json.decode(jsonString));
 
-    expect(order.id, "0123456789abcdefghijk");
+    expect(order.id, "5ceea32c-418b-4fa5-af8f-9e270ec19acf");
 
     PaymentDetails paymentDetails = order.paymentDetails;
 
     expect(paymentDetails.type, "crypto_address");
-    expect(paymentDetails.cryptoAddress,
-        "0xf35074bbd0a9aee46f4ea137971feec024ab7048");
+    expect(paymentDetails.cryptoAddress, "3Qaur9qYjEYtuLiwZNxvh4LzeMn54aALZX");
     expect(paymentDetails.bankAccount, null);
 
     Input input = order.input;
 
-    expect(input.amount, 0.5);
+    expect(input.amount, 0.11450327);
 
     Output output = order.output;
 
-    expect(output.amount, 104.95);
+    expect(output.amount, 900.0);
     expect(output.iban, "CH3600000000000000000");
   });
 
