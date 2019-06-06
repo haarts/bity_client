@@ -1,5 +1,14 @@
 import 'package:http/http.dart' as http;
 
+class InvalidBankAddress implements Exception {
+  InvalidBankAddress(this.owner, this.upstreamMessage);
+  String owner;
+  String upstreamMessage;
+
+  String toString() =>
+      "'$owner' is not a valid owner (upstream message: '$upstreamMessage')";
+}
+
 class UnsupportedCurrency implements Exception {
   UnsupportedCurrency(this.supportedCurrencies, this.providedCurrency);
   String providedCurrency;

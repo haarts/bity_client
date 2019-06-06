@@ -119,6 +119,11 @@ class Client {
       return response.headers[HttpHeaders.locationHeader];
     }
 
+    var errors = json.decode(response.body)["errors"];
+    if (errors[0]["code"] == "invalid_bank_address") {
+      throw InvalidBankAddress(owner.toString(), errors[0]["message"]);
+    }
+
     throw FailedHttpRequest(requestUrl, requestBody, response);
   }
 

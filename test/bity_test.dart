@@ -118,8 +118,9 @@ void main() {
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
-    test("returns a sane error message", () async {
-      server.enqueue(httpCode: 400);
+    test("throws a generic exception", () async {
+      server.enqueue(
+          httpCode: 400, body: '{"errors": [{"code": "some_code"}]}');
 
       expect(
           () => client.createCryptoToFiatOrder(
@@ -131,6 +132,23 @@ void main() {
               ),
           throwsA(TypeMatcher<FailedHttpRequest>()
               .having((e) => e.toString(), "toString()", contains('400'))));
+    });
+
+    test("throws an exception when the owner is invalid/unknown", () async {
+      var cannedResponse =
+          await File('test/files/invalid_bank_address.json').readAsString();
+      server.enqueue(httpCode: 400, body: cannedResponse);
+
+      expect(
+          () => client.createCryptoToFiatOrder(
+                inputCurrency: inputCurrency,
+                outputAmount: outputAmount,
+                outputCurrency: outputCurrency,
+                outputIban: iban,
+                owner: Owner("", "", "", "", ""),
+              ),
+          throwsA(TypeMatcher<InvalidBankAddress>()
+              .having((e) => e.toString(), "toString()", contains(''))));
     });
 
     test("return a URL pointing to the created order", () async {
