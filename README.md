@@ -8,7 +8,7 @@ A library for communicating with the [Bity API]. Some calls are missing.
 
 ### Get an estimate
 ```dart
-  var client = Client('https://bity.com/');
+  var client = Client('https://exchange.api.bity.com/');
   print(await client.estimate(inputCurrency: "BTC", inputAmount: 1, outputCurrency: "CHF"));
   client.close();
 ```
@@ -18,8 +18,8 @@ In this example you want to buy 1000 CHF for Ether. How much Ether that
 is going to cost can be found by looking at the generated order.
 
 ```dart
-  var client = Client('https://bity.com/');
-  var uuid = await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban"));
+  var client = Client('https://exchange.api.bity.com/');
+  var uuid = await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban", "owner": {"name": "some name", "address": "some street", "zip": "some zip", "city": "some city", "country": "some country CODE!"}));
   print(uuid);
   client.close();
 ```
@@ -27,7 +27,7 @@ is going to cost can be found by looking at the generated order.
 ### View order
 
 ```dart
-  var client = Client('https://bity.com/');
+  var client = Client('https://exchange.api.bity.com/');
   print(await client.getOrder("some uuid"));
   client.close();
 ```
@@ -51,4 +51,4 @@ always remain free for everybody to access.
 
 ## Thanks
 
-[Bity API]: https://doc.bity.com/backend/v2.html
+[Bity API]: https://doc.bity.com/exchange/v2.html
