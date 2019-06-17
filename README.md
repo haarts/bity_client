@@ -19,7 +19,7 @@ is going to cost can be found by looking at the generated order.
 
 ```dart
   var client = Client('https://exchange.api.bity.com/');
-  var uuid = await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban", "owner": {"name": "some name", "address": "some street", "zip": "some zip", "city": "some city", "country": "some country CODE!"}));
+  var uuid = await client.createCryptoToFiatOrder(inputCurrency: "ETH", outputCurrency: "CHF", outputAmount: 1000, outputIban: "some iban", "owner": {"name": "some name", "address": "some street", "zip": "some zip", "city": "some city", "country": "some country CODE!"}, "reference": "a reference"));
   print(uuid);
   client.close();
 ```

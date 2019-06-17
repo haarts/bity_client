@@ -83,6 +83,7 @@ class Client {
     String outputCurrency,
     String outputIban,
     Owner owner,
+    String reference,
   }) async {
     _anyUnsupportedCurrencies(inputCurrency, outputCurrency);
     _validateIban(outputIban);
@@ -99,6 +100,7 @@ class Client {
       "amount": outputAmount.toString(),
       "iban": outputIban,
       "owner": owner,
+      "reference": reference,
     };
     var requestBody = json.encode({"input": input, "output": output});
 

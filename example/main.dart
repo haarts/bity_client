@@ -20,6 +20,7 @@ void main() async {
     outputCurrency: "CHF",
     outputIban: "AT611904300234573201",
     owner: owner,
+    reference: "inapay",
   );
   var orders = await client.getOrders();
   print('Orders: $orders');

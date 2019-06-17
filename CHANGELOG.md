@@ -1,3 +1,6 @@
+v0.3.3
+* Add optional reference field to createCryptoToFiatOrder call
+
 v0.3.2
 * Add OrderAmountTooLow exception
  

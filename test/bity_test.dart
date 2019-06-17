@@ -22,6 +22,7 @@ var owner = Owner(
   "Some country",
   "Some name",
 );
+const reference = "some reference";
 
 void main() {
   setUp(() async {
@@ -104,6 +105,7 @@ void main() {
                 outputCurrency: outputCurrency,
                 outputIban: iban,
                 owner: owner,
+                reference: reference,
               ),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
 
@@ -114,6 +116,7 @@ void main() {
                 outputCurrency: "BAR",
                 outputIban: iban,
                 owner: owner,
+                reference: reference,
               ),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
@@ -147,6 +150,7 @@ void main() {
                 outputCurrency: outputCurrency,
                 outputIban: iban,
                 owner: owner,
+                reference: reference,
               ),
           throwsA(TypeMatcher<FailedHttpRequest>()
               .having((e) => e.toString(), "toString()", contains('400'))));
@@ -164,6 +168,7 @@ void main() {
                 outputCurrency: outputCurrency,
                 outputIban: iban,
                 owner: Owner("", "", "", "", ""),
+                reference: reference,
               ),
           throwsA(TypeMatcher<InvalidBankAddress>()
               .having((e) => e.toString(), "toString()", contains(''))));
@@ -181,6 +186,7 @@ void main() {
         outputCurrency: outputCurrency,
         outputIban: iban,
         owner: owner,
+        reference: reference,
       );
 
       var request = server.takeRequest();
@@ -190,7 +196,7 @@ void main() {
       expect(
         request.body,
         equals(
-            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201","owner":{"address":"Some street","country":"Some country","city":"Some city","zip":"Some zip","name":"Some name"}}}'),
+            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201","owner":{"address":"Some street","country":"Some country","city":"Some city","zip":"Some zip","name":"Some name"}, "reference":"some reference"}}'),
       );
       expect(result, equals(someUrl));
     });
@@ -212,6 +218,7 @@ void main() {
         outputCurrency: outputCurrency,
         outputIban: iban,
         owner: owner,
+        reference: reference,
       );
       // Not interested in the first request
       server.takeRequest();
@@ -232,6 +239,7 @@ void main() {
         outputCurrency: outputCurrency,
         outputIban: iban,
         owner: owner,
+        reference: reference,
       );
 
       var request = server.takeRequest();
