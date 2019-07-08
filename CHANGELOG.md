@@ -1,3 +1,6 @@
+v0.3.1
+* Handle 'exceeds_quota' error
+
 v0.3.0
 * Order placement needs an Owner
 * Order queries need a session identifier

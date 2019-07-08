@@ -40,3 +40,12 @@ class FailedHttpRequest implements Exception {
     ''';
   }
 }
+
+class QuotaExceeded implements Exception {
+  QuotaExceeded(this.owner, this.upstreamMessage);
+  String owner;
+  String upstreamMessage;
+
+  String toString() =>
+      "'$owner' exceeded the quota (upstream message: '$upstreamMessage')";
+}

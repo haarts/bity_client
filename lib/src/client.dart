@@ -122,6 +122,8 @@ class Client {
     var errors = json.decode(response.body)["errors"];
     if (errors[0]["code"] == "invalid_bank_address") {
       throw InvalidBankAddress(owner.toString(), errors[0]["message"]);
+    } else if (errors[0]["code"] == "exceeds_quota") {
+      throw QuotaExceeded(owner.toString(), errors[0]["message"]);
     }
 
     throw FailedHttpRequest(requestUrl, requestBody, response);
