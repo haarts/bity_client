@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 
 class InvalidBankAddress implements Exception {
+  static const String remoteErrorCode = "invalid_bank_address";
+
   InvalidBankAddress(this.owner, this.upstreamMessage);
   String owner;
   String upstreamMessage;
@@ -42,6 +44,8 @@ class FailedHttpRequest implements Exception {
 }
 
 class QuotaExceeded implements Exception {
+  static const String remoteErrorCode = "exceeds_quota";
+
   QuotaExceeded(this.owner, this.upstreamMessage);
   String owner;
   String upstreamMessage;
