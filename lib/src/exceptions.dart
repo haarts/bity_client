@@ -49,3 +49,12 @@ class QuotaExceeded implements Exception {
   String toString() =>
       "'$owner' exceeded the quota (upstream message: '$upstreamMessage')";
 }
+
+class OrderAmountTooLow implements Exception {
+  static const String remoteErrorCode = "amount_too_low";
+
+  OrderAmountTooLow(this.upstreamMessage);
+  final String upstreamMessage;
+
+  String toString() => upstreamMessage;
+}

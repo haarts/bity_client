@@ -124,6 +124,8 @@ class Client {
       throw InvalidBankAddress(owner.toString(), errors[0]["message"]);
     } else if (errors[0]["code"] == "exceeds_quota") {
       throw QuotaExceeded(owner.toString(), errors[0]["message"]);
+    } else if (errors[0]["code"] == OrderAmountTooLow.remoteErrorCode) {
+      throw OrderAmountTooLow(errors[0]["message"]);
     }
 
     throw FailedHttpRequest(requestUrl, requestBody, response);

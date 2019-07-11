@@ -118,6 +118,24 @@ void main() {
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
+    test("throws a OrderAmountTooLow exception", () async {
+      server.enqueue(
+        httpCode: 400,
+        body: File('test/files/order_amount_too_low.json').readAsStringSync(),
+      );
+
+      expect(
+        () => client.createCryptoToFiatOrder(
+              inputCurrency: inputCurrency,
+              outputAmount: outputAmount,
+              outputCurrency: outputCurrency,
+              outputIban: iban,
+              owner: owner,
+            ),
+        throwsA(TypeMatcher<OrderAmountTooLow>()),
+      );
+    });
+
     test("throws a generic exception", () async {
       server.enqueue(
           httpCode: 400, body: '{"errors": [{"code": "some_code"}]}');
