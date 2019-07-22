@@ -129,12 +129,12 @@ void main() {
 
       expect(
         () => client.createCryptoToFiatOrder(
-              inputCurrency: inputCurrency,
-              outputAmount: outputAmount,
-              outputCurrency: outputCurrency,
-              outputIban: iban,
-              owner: owner,
-            ),
+          inputCurrency: inputCurrency,
+          outputAmount: outputAmount,
+          outputCurrency: outputCurrency,
+          outputIban: iban,
+          owner: owner,
+        ),
         throwsA(TypeMatcher<OrderAmountTooLow>()),
       );
     });
@@ -196,7 +196,7 @@ void main() {
       expect(
         request.body,
         equals(
-            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201","owner":{"address":"Some street","country":"Some country","city":"Some city","zip":"Some zip","name":"Some name"}, "reference":"some reference"}}'),
+            '{"input":{"currency":"BTC","type":"crypto_address"},"output":{"currency":"EUR","type":"bank_account","amount":"20.3","iban":"AT611904300234573201","owner":{"address":"Some street","country":"Some country","city":"Some city","zip":"Some zip","name":"Some name"},"reference":"some reference"}}'),
       );
       expect(result, equals(someUrl));
     });
@@ -244,6 +244,20 @@ void main() {
 
       var request = server.takeRequest();
       expect(request.headers[HttpHeaders.cookieHeader], sessionValue);
+    });
+
+    test("absent reference argument", () async {
+      server.enqueue(httpCode: 201);
+      await client.createCryptoToFiatOrder(
+        inputCurrency: inputCurrency,
+        outputAmount: outputAmount,
+        outputCurrency: outputCurrency,
+        outputIban: iban,
+        owner: owner,
+      );
+
+      var request = server.takeRequest();
+      expect(json.decode(request.body)["output"], isNot(contains('reference')));
     });
   });
 

@@ -100,8 +100,11 @@ class Client {
       "amount": outputAmount.toString(),
       "iban": outputIban,
       "owner": owner,
-      "reference": reference,
     };
+    if (reference != null) {
+      output["reference"] = reference;
+    }
+
     var requestBody = json.encode({"input": input, "output": output});
 
     var headers = Map<String, String>.from(_headers);
