@@ -1,3 +1,6 @@
+v0.3.4
+* Add a list of countries that support receiving fiat
+
 v0.3.3
 * Add optional reference field to createCryptoToFiatOrder call
 
