@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Response;
 import 'package:iban/iban.dart';
 
+import 'package:http/http.dart' if (dart.library.js) 'browser_client.dart' as http;
 import 'exceptions.dart';
 import 'order.dart';
 import 'owner.dart';
@@ -202,7 +203,7 @@ class Client {
     throw FailedHttpRequest(Uri.parse(requestUrl), '', response);
   }
 
-  void _setSession(http.Response response) {
+  void _setSession(Response response) {
     String cookie = response.headers[HttpHeaders.setCookieHeader];
     if (cookie != null) {
       _session = Cookie.fromSetCookieValue(cookie);
