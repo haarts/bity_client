@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show Cookie, HttpHeaders;
 
 import 'package:http/http.dart' as http;
 import 'package:iban/iban.dart';
