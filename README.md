@@ -43,7 +43,7 @@ dependencies:
 
 ## Licence overview
 
-All files in this repository fall under the license specified in 
+All files in this repository fall under the license specified in
 [COPYING](COPYING). The project is licensed as [AGPL with a lesser clause](https://www.gnu.org/licenses/agpl-3.0.en.html). 
 It may be used within a proprietary project, but the core library and any 
 changes to it must be published online. Source code for this library must 
