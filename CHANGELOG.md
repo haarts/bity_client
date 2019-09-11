@@ -1,3 +1,6 @@
+v0.3.5
+* Add priceGuaranteed to Order
+
 v0.3.4
 * Add a list of countries that support receiving fiat
 

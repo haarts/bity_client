@@ -291,6 +291,8 @@ void main() {
 
     expect(order.id, "5ceea32c-418b-4fa5-af8f-9e270ec19acf");
 
+    expect(order.priceGuaranteed, DateTime.parse("2019-06-04T13:32:46.765Z"));
+
     PaymentDetails paymentDetails = order.paymentDetails;
 
     expect(paymentDetails.type, "crypto_address");

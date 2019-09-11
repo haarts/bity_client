@@ -1,17 +1,19 @@
 class Order {
   final String id;
   final PaymentDetails paymentDetails;
+  final DateTime priceGuaranteed;
   final Input input;
   final Output output;
 
   Order.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         paymentDetails = PaymentDetails.fromJson(json['payment_details']),
+        priceGuaranteed = DateTime.parse(json['timestamp_price_guaranteed']),
         input = Input.fromJson(json['input']),
         output = Output.fromJson(json['output']);
 
   String toString() {
-    return "Order: id=$id, input=$input, output=$output, paymentDetails=$paymentDetails";
+    return "Order: id=$id, input=$input, output=$output, paymentDetails=$paymentDetails, priceGuaranteed=$priceGuaranteed";
   }
 }
 
