@@ -3,21 +3,21 @@ import 'package:bity/bity.dart';
 void main() async {
   var client = Client('https://exchange.api.bity.com/');
   var estimate = await client
-      .getEstimate(inputCurrency: "BTC", inputAmount: 1, outputCurrency: "CHF")
+      .getEstimate(inputCurrency: "BTC", inputAmount: 1, outputCurrency: "EUR")
       .timeout(const Duration(seconds: 2));
-  print('1 BTC costs $estimate CHF');
+  print('1 BTC costs $estimate EUR');
 
   var owner = Owner(
     "Some street",
     "Some city",
     "Some zip",
-    "CH",
+    "AT",
     "Some name",
   );
   await client.createCryptoToFiatOrder(
     inputCurrency: "BTC",
     outputAmount: 10.0,
-    outputCurrency: "CHF",
+    outputCurrency: "EUR",
     outputIban: "AT611904300234573201",
     owner: owner,
     reference: "inapay",
