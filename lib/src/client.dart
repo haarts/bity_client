@@ -4,7 +4,8 @@ import 'dart:io' show Cookie, HttpHeaders;
 import 'package:http/http.dart' show Response;
 import 'package:iban/iban.dart';
 
-import 'package:http/http.dart' if (dart.library.js) 'browser_client.dart' as http;
+import 'package:http/http.dart' if (dart.library.js) 'browser_client.dart'
+    as http;
 import 'exceptions.dart';
 import 'order.dart';
 import 'owner.dart';
