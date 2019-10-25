@@ -1,6 +1,7 @@
 # Bity library
 
 [![pub package](https://img.shields.io/pub/v/bity.svg)](https://pub.dartlang.org/packages/bity)
+[![CircleCI](https://circleci.com/gh/inapay/bity_client.svg?style=svg)](https://circleci.com/gh/inapay/bity_client)
 
 A library for communicating with the [Bity API]. Some calls are missing.
 
