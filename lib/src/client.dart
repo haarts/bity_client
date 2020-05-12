@@ -11,18 +11,25 @@ import 'order.dart';
 import 'owner.dart';
 
 // TODO split this in crypto and fiat, then the checks can be more specific.
-const currencies = ["EUR", "CHF", "BTC"];
+const currencies = ['EUR', 'CHF', 'BTC'];
 
 class Client {
+  /// Create a new Bity client. Only the domain should be passed (the path is
+  /// stripped).
+  Client(String url) {
+    _httpClient = http.Client();
+    this.url = Uri.parse(url).replace(path: '');
+  }
+
   /// Used to send an appropriate User-Agent header with the HTTP requests.
   static const String _userAgent = 'Bity - Dart';
   static const String _mediaType = 'application/json';
 
   static const String _apiPrefix = '/v2';
-  static const String _estimatePath = _apiPrefix + '/orders/estimate';
-  static const String _createOrderPath = _apiPrefix + '/orders';
-  static const String _ordersPath = _apiPrefix + '/orders';
-  static const String _currenciesPath = _apiPrefix + '/currencies';
+  static const String _estimatePath = '$_apiPrefix/orders/estimate';
+  static const String _createOrderPath = '$_apiPrefix/orders';
+  static const String _ordersPath = '$_apiPrefix/orders';
+  static const String _currenciesPath = '$_apiPrefix/currencies';
 
   static const _headers = {
     HttpHeaders.userAgentHeader: _userAgent,
@@ -36,13 +43,6 @@ class Client {
   http.Client _httpClient;
 
   Cookie _session;
-
-  /// Create a new Bity client. Only the domain should be passed (the path is
-  /// stripped).
-  Client(String url) {
-    _httpClient = http.Client();
-    this.url = Uri.parse(url).replace(path: "");
-  }
 
   /// Close the client when done.
   void close() {
@@ -58,8 +58,8 @@ class Client {
 
     var requestUrl = url.replace(path: _estimatePath);
     var requestBody = json.encode({
-      "input": {"currency": inputCurrency, "amount": inputAmount.toString()},
-      "output": {"currency": outputCurrency}
+      'input': {'currency': inputCurrency, 'amount': inputAmount.toString()},
+      'output': {'currency': outputCurrency}
     });
 
     var response = await _httpClient.post(
@@ -70,7 +70,7 @@ class Client {
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      return double.parse(jsonResponse["output"]["amount"]);
+      return double.parse(jsonResponse['output']['amount']);
     }
 
     throw FailedHttpRequest(requestUrl, requestBody, response);
@@ -93,25 +93,25 @@ class Client {
     var requestUrl = url.replace(path: _createOrderPath);
 
     var input = {
-      "currency": inputCurrency,
-      "type": "crypto_address",
+      'currency': inputCurrency,
+      'type': 'crypto_address',
     };
     var output = {
-      "currency": outputCurrency,
-      "type": "bank_account",
-      "amount": outputAmount.toString(),
-      "iban": outputIban,
-      "owner": owner,
+      'currency': outputCurrency,
+      'type': 'bank_account',
+      'amount': outputAmount.toString(),
+      'iban': outputIban,
+      'owner': owner,
     };
     if (reference != null) {
-      output["reference"] = reference;
+      output['reference'] = reference;
     }
 
-    var requestBody = json.encode({"input": input, "output": output});
+    var requestBody = json.encode({'input': input, 'output': output});
 
     var headers = Map<String, String>.from(_headers);
     if (_session != null) {
-      headers..[HttpHeaders.cookieHeader] = _session.toString();
+      headers[HttpHeaders.cookieHeader] = _session.toString();
     }
 
     var response = await _httpClient.post(
@@ -126,13 +126,13 @@ class Client {
       return response.headers[HttpHeaders.locationHeader];
     }
 
-    var errors = json.decode(response.body)["errors"];
-    if (errors[0]["code"] == InvalidBankAddress.remoteErrorCode) {
-      throw InvalidBankAddress(owner.toString(), errors[0]["message"]);
-    } else if (errors[0]["code"] == QuotaExceeded.remoteErrorCode) {
-      throw QuotaExceeded(owner.toString(), errors[0]["message"]);
-    } else if (errors[0]["code"] == OrderAmountTooLow.remoteErrorCode) {
-      throw OrderAmountTooLow(errors[0]["message"]);
+    var errors = json.decode(response.body)['errors'];
+    if (errors[0]['code'] == InvalidBankAddress.remoteErrorCode) {
+      throw InvalidBankAddress(owner.toString(), errors[0]['message']);
+    } else if (errors[0]['code'] == QuotaExceeded.remoteErrorCode) {
+      throw QuotaExceeded(owner.toString(), errors[0]['message']);
+    } else if (errors[0]['code'] == OrderAmountTooLow.remoteErrorCode) {
+      throw OrderAmountTooLow(errors[0]['message']);
     }
 
     throw FailedHttpRequest(requestUrl, requestBody, response);
@@ -140,7 +140,7 @@ class Client {
 
   /// Returns an order identified by a UUID
   Future<Order> getOrder(String uuid) async {
-    var requestUrl = url.replace(path: _ordersPath + "/" + uuid);
+    var requestUrl = url.replace(path: '$_ordersPath/$uuid');
 
     var response = await _httpClient.get(
       requestUrl,
@@ -166,7 +166,7 @@ class Client {
 
     if (response.statusCode == 200) {
       var jsonOrders = json.decode(response.body);
-      return jsonOrders["orders"]
+      return jsonOrders['orders']
           .map<Order>((order) => Order.fromJson(order))
           .toList();
     }
@@ -175,17 +175,17 @@ class Client {
   }
 
   Future<List<String>> getFiatCurrencies() async {
-    return getCurrencies("fiat");
+    return getCurrencies('fiat');
   }
 
   Future<List<String>> getCryptoCurrencies() async {
-    return getCurrencies("crypto");
+    return getCurrencies('crypto');
   }
 
   Future<List<String>> getCurrencies([String filter]) async {
-    String tags = "";
+    var tags = '';
     if (filter != null) {
-      tags = "?tags=$filter";
+      tags = '?tags=$filter';
     }
     var requestUrl = url.toString() + _currenciesPath + tags;
 
@@ -196,8 +196,8 @@ class Client {
 
     if (response.statusCode == 200) {
       var jsonCurrencies = json.decode(response.body);
-      return jsonCurrencies["currencies"]
-          .map<String>((currency) => currency["code"] as String)
+      return jsonCurrencies['currencies']
+          .map<String>((currency) => currency['code'] as String)
           .toList();
     }
 
@@ -205,7 +205,7 @@ class Client {
   }
 
   void _setSession(Response response) {
-    String cookie = response.headers[HttpHeaders.setCookieHeader];
+    var cookie = response.headers[HttpHeaders.setCookieHeader];
     if (cookie != null) {
       _session = Cookie.fromSetCookieValue(cookie);
     }
@@ -232,5 +232,5 @@ class Client {
   }
 
   @override
-  String toString() => "Client(url: $url)";
+  String toString() => 'Client(url: $url)';
 }

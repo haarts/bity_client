@@ -1,12 +1,14 @@
 import 'package:http/http.dart' as http;
 
 class InvalidBankAddress implements Exception {
-  static const String remoteErrorCode = "invalid_bank_address";
-
   InvalidBankAddress(this.owner, this.upstreamMessage);
+
+  static const String remoteErrorCode = 'invalid_bank_address';
+
   String owner;
   String upstreamMessage;
 
+  @override
   String toString() =>
       "'$owner' is not a valid owner (upstream message: '$upstreamMessage')";
 }
@@ -16,6 +18,7 @@ class UnsupportedCurrency implements Exception {
   String providedCurrency;
   List<String> supportedCurrencies;
 
+  @override
   String toString() =>
       "'$providedCurrency' is not a valid currency: $supportedCurrencies";
 }
@@ -24,7 +27,8 @@ class InvalidIban implements Exception {
   InvalidIban(this.iban);
   String iban;
 
-  String toString() => "'$iban' is not a valid IBAN";
+  @override
+  String toString() => "$iban' is not a valid IBAN";
 }
 
 class FailedHttpRequest implements Exception {
@@ -33,6 +37,7 @@ class FailedHttpRequest implements Exception {
   String requestBody;
   http.Response response;
 
+  @override
   String toString() {
     return '''
     	Request URL: $requestUrl,
@@ -44,21 +49,25 @@ class FailedHttpRequest implements Exception {
 }
 
 class QuotaExceeded implements Exception {
-  static const String remoteErrorCode = "exceeds_quota";
-
   QuotaExceeded(this.owner, this.upstreamMessage);
+
+  static const String remoteErrorCode = 'exceeds_quota';
+
   String owner;
   String upstreamMessage;
 
+  @override
   String toString() =>
-      "'$owner' exceeded the quota (upstream message: '$upstreamMessage')";
+      "$owner' exceeded the quota (upstream message: '$upstreamMessage')";
 }
 
 class OrderAmountTooLow implements Exception {
-  static const String remoteErrorCode = "amount_too_low";
-
   OrderAmountTooLow(this.upstreamMessage);
+
+  static const String remoteErrorCode = 'amount_too_low';
+
   final String upstreamMessage;
 
+  @override
   String toString() => upstreamMessage;
 }

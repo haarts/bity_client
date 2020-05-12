@@ -2,27 +2,27 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:test/test.dart';
-import "package:mock_web_server/mock_web_server.dart";
+import 'package:mock_web_server/mock_web_server.dart';
 
-import "package:bity/bity.dart";
+import 'package:bity/bity.dart';
 
 MockWebServer server;
 Client client;
 
-const inputCurrency = "BTC";
+const inputCurrency = 'BTC';
 const inputAmount = 1.0;
-const outputCurrency = "EUR";
+const outputCurrency = 'EUR';
 const outputAmount = 20.3;
-const iban = "AT611904300234573201";
-const someUuid = "0123456789abcdefghijk";
+const iban = 'AT611904300234573201';
+const someUuid = '0123456789abcdefghijk';
 var owner = Owner(
-  "Some street",
-  "Some city",
-  "Some zip",
-  "Some country",
-  "Some name",
+  'Some street',
+  'Some city',
+  'Some zip',
+  'Some country',
+  'Some name',
 );
-const reference = "some reference";
+const reference = 'some reference';
 
 void main() {
   setUp(() async {
@@ -35,16 +35,16 @@ void main() {
     server.shutdown();
   });
 
-  test("initialize", () {
+  test('initialize', () {
     expect(client, isNotNull);
-    expect(client.url.host, "127.0.0.1");
+    expect(client.url.host, '127.0.0.1');
   });
 
-  group("getEstimate()", () {
-    test("rejects unsupported currencies", () {
+  group('getEstimate()', () {
+    test('rejects unsupported currencies', () {
       expect(
           () => client.getEstimate(
-              inputCurrency: "FOO",
+              inputCurrency: 'FOO',
               inputAmount: inputAmount,
               outputCurrency: outputCurrency),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
@@ -52,11 +52,11 @@ void main() {
           () => client.getEstimate(
               inputCurrency: inputCurrency,
               inputAmount: inputAmount,
-              outputCurrency: "BAR"),
+              outputCurrency: 'BAR'),
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
-    test("returns double", () async {
+    test('returns double', () async {
       const outputAmount = 3087.86;
       server.enqueue(body: '''
        {
@@ -83,7 +83,7 @@ void main() {
       expect(result, equals(outputAmount));
     });
 
-    test("returns a sane error message", () async {
+    test('returns a sane error message', () async {
       server.enqueue(httpCode: 400);
 
       expect(
@@ -92,15 +92,15 @@ void main() {
               inputAmount: inputAmount,
               outputCurrency: outputCurrency),
           throwsA(TypeMatcher<FailedHttpRequest>()
-              .having((e) => e.toString(), "toString()", contains('400'))));
+              .having((e) => e.toString(), 'toString()', contains('400'))));
     });
   });
 
-  group("createCryptoToFiatOrder()", () {
-    test("rejects unsupported currencies", () async {
+  group('createCryptoToFiatOrder()', () {
+    test('rejects unsupported currencies', () async {
       expect(
           () => client.createCryptoToFiatOrder(
-                inputCurrency: "FOO",
+                inputCurrency: 'FOO',
                 outputAmount: outputAmount,
                 outputCurrency: outputCurrency,
                 outputIban: iban,
@@ -113,7 +113,7 @@ void main() {
           () => client.createCryptoToFiatOrder(
                 inputCurrency: inputCurrency,
                 outputAmount: outputAmount,
-                outputCurrency: "BAR",
+                outputCurrency: 'BAR',
                 outputIban: iban,
                 owner: owner,
                 reference: reference,
@@ -121,7 +121,7 @@ void main() {
           throwsA(const TypeMatcher<UnsupportedCurrency>()));
     });
 
-    test("throws a OrderAmountTooLow exception", () async {
+    test('throws a OrderAmountTooLow exception', () async {
       server.enqueue(
         httpCode: 400,
         body: File('test/files/order_amount_too_low.json').readAsStringSync(),
@@ -139,7 +139,7 @@ void main() {
       );
     });
 
-    test("throws a generic exception", () async {
+    test('throws a generic exception', () async {
       server.enqueue(
           httpCode: 400, body: '{"errors": [{"code": "some_code"}]}');
 
@@ -153,10 +153,10 @@ void main() {
                 reference: reference,
               ),
           throwsA(TypeMatcher<FailedHttpRequest>()
-              .having((e) => e.toString(), "toString()", contains('400'))));
+              .having((e) => e.toString(), 'toString()', contains('400'))));
     });
 
-    test("throws an exception when the owner is invalid/unknown", () async {
+    test('throws an exception when the owner is invalid/unknown', () async {
       var cannedResponse =
           await File('test/files/invalid_bank_address.json').readAsString();
       server.enqueue(httpCode: 400, body: cannedResponse);
@@ -167,16 +167,16 @@ void main() {
                 outputAmount: outputAmount,
                 outputCurrency: outputCurrency,
                 outputIban: iban,
-                owner: Owner("", "", "", "", ""),
+                owner: Owner('', '', '', '', ''),
                 reference: reference,
               ),
           throwsA(TypeMatcher<InvalidBankAddress>()
-              .having((e) => e.toString(), "toString()", contains(''))));
+              .having((e) => e.toString(), 'toString()', contains(''))));
     });
 
-    test("return a URL pointing to the created order", () async {
+    test('return a URL pointing to the created order', () async {
       const someUrl =
-          "https://exchange.api.bity.com/v2/orders/420cb74c-f347-4460-b085-13641ad74525";
+          'https://exchange.api.bity.com/v2/orders/420cb74c-f347-4460-b085-13641ad74525';
       server.enqueue(
           httpCode: 201, headers: {HttpHeaders.locationHeader: someUrl});
 
@@ -201,8 +201,8 @@ void main() {
       expect(result, equals(someUrl));
     });
 
-    test("client sends a session cookie when present", () async {
-      var sessionValue = "session=first";
+    test('client sends a session cookie when present', () async {
+      var sessionValue = 'session=first';
 
       // Setup first response
       server.enqueue(
@@ -221,15 +221,16 @@ void main() {
         reference: reference,
       );
       // Not interested in the first request
-      server.takeRequest();
+      server
+        ..takeRequest()
 
-      // Setup second response
-      server.enqueue(
-        httpCode: 201,
-        headers: {
-          HttpHeaders.setCookieHeader: "session=second",
-        },
-      );
+        // Setup second response
+        ..enqueue(
+          httpCode: 201,
+          headers: {
+            HttpHeaders.setCookieHeader: 'session=second',
+          },
+        );
 
       // This request SHOULD pass the session value received from the first
       // request
@@ -246,7 +247,7 @@ void main() {
       expect(request.headers[HttpHeaders.cookieHeader], sessionValue);
     });
 
-    test("absent reference argument", () async {
+    test('absent reference argument', () async {
       server.enqueue(httpCode: 201);
       await client.createCryptoToFiatOrder(
         inputCurrency: inputCurrency,
@@ -257,21 +258,21 @@ void main() {
       );
 
       var request = server.takeRequest();
-      expect(json.decode(request.body)["output"], isNot(contains('reference')));
+      expect(json.decode(request.body)['output'], isNot(contains('reference')));
     });
   });
 
-  group("getOrder()", () {
-    test("returns a sane error message", () async {
+  group('getOrder()', () {
+    test('returns a sane error message', () async {
       server.enqueue(httpCode: 400);
 
       expect(
           () => client.getOrder(someUuid),
           throwsA(TypeMatcher<FailedHttpRequest>()
-              .having((e) => e.toString(), "toString()", contains('400'))));
+              .having((e) => e.toString(), 'toString()', contains('400'))));
     });
 
-    test("returns the order", () async {
+    test('returns the order', () async {
       var cannedResponse = await File('test/files/order.json').readAsString();
       server.enqueue(httpCode: 200, body: cannedResponse);
 
@@ -284,42 +285,42 @@ void main() {
     });
   });
 
-  test("Order.fromJson()", () async {
+  test('Order.fromJson()', () async {
     var jsonString = await File('test/files/order.json').readAsString();
 
-    Order order = Order.fromJson(json.decode(jsonString));
+    var order = Order.fromJson(json.decode(jsonString));
 
-    expect(order.id, "5ceea32c-418b-4fa5-af8f-9e270ec19acf");
+    expect(order.id, '5ceea32c-418b-4fa5-af8f-9e270ec19acf');
 
-    expect(order.priceGuaranteed, DateTime.parse("2019-06-04T13:32:46.765Z"));
+    expect(order.priceGuaranteed, DateTime.parse('2019-06-04T13:32:46.765Z'));
 
-    PaymentDetails paymentDetails = order.paymentDetails;
+    var paymentDetails = order.paymentDetails;
 
-    expect(paymentDetails.type, "crypto_address");
-    expect(paymentDetails.cryptoAddress, "3Qaur9qYjEYtuLiwZNxvh4LzeMn54aALZX");
+    expect(paymentDetails.type, 'crypto_address');
+    expect(paymentDetails.cryptoAddress, '3Qaur9qYjEYtuLiwZNxvh4LzeMn54aALZX');
     expect(paymentDetails.bankAccount, null);
 
-    Input input = order.input;
+    var input = order.input;
 
     expect(input.amount, 0.11450327);
 
-    Output output = order.output;
+    var output = order.output;
 
     expect(output.amount, 900.0);
-    expect(output.iban, "CH3600000000000000000");
+    expect(output.iban, 'CH3600000000000000000');
   });
 
-  group("getOrders()", () {
-    test("returns a sane error message", () async {
+  group('getOrders()', () {
+    test('returns a sane error message', () async {
       server.enqueue(httpCode: 400);
 
       expect(
           () => client.getOrders(),
           throwsA(TypeMatcher<FailedHttpRequest>()
-              .having((e) => e.toString(), "toString()", contains('400'))));
+              .having((e) => e.toString(), 'toString()', contains('400'))));
     });
 
-    test("returns the orders", () async {
+    test('returns the orders', () async {
       var cannedResponse = await File('test/files/orders.json').readAsString();
       server.enqueue(httpCode: 200, body: cannedResponse);
 
@@ -333,8 +334,8 @@ void main() {
     });
   });
 
-  group("getCurrencies()", () {
-    test("returns the currencies", () async {
+  group('getCurrencies()', () {
+    test('returns the currencies', () async {
       var cannedResponse =
           await File('test/files/currencies.json').readAsString();
       server.enqueue(httpCode: 200, body: cannedResponse);

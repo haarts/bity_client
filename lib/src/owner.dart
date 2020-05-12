@@ -1,5 +1,13 @@
 /// This class is required when placing orders.
 class Owner {
+  Owner(
+    this.address,
+    this.city,
+    this.zip,
+    this.country,
+    this.name,
+  );
+
   /// Should have been called 'street' but 'address' mirrors the API
   final String address;
 
@@ -10,21 +18,13 @@ class Owner {
   final String zip;
   final String name;
 
-  Owner(
-    this.address,
-    this.city,
-    this.zip,
-    this.country,
-    this.name,
-  );
-
   Map<String, dynamic> toJson() {
     return {
-      "address": address,
-      "country": country,
-      "city": city,
-      "zip": zip,
-      "name": name,
+      'address': address,
+      'country': country,
+      'city': city,
+      'zip': zip,
+      'name': name,
     };
   }
 }
