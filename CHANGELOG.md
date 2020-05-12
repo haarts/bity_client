@@ -1,3 +1,6 @@
+v0.4.0
+* Bump iban dependency
+
 v0.3.5
 * Add priceGuaranteed to Order
 
