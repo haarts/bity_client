@@ -1,6 +1,6 @@
 import 'package:bity/bity.dart';
 
-// allow:
+// ignore_for_file: avoid_print
 Future<void> main() async {
   var client = Client('https://exchange.api.bity.com/');
   var estimate = await client
